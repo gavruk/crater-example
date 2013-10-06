@@ -23,10 +23,11 @@ func main() {
 	})
 
 	app.Get("/hello", func(req *crater.Request, res *crater.Response) {
-		var username = "your_name"
-		if req.Params["name"] != nil {
-			username = req.Params["name"][0]
+		var username string
+		if value, ok := req.GetString("name"); ok {
+			username = value
 		}
+
 		user := &models.User{Name: username}
 		res.Render("hello", user)
 	})
