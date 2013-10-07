@@ -1,4 +1,4 @@
-Example of [`crater`](github.com/gavruk/crater) app
+Example of [`crater`](https://github.com/gavruk/crater) app
 ==============
 
 ###Usage:
