@@ -36,6 +36,21 @@ func main() {
 		res.Render("hello", user)
 	})
 
+	app.Get("/post", func(req *crater.Request, res *crater.Response) {
+		fmt.Println("called")
+		res.Render("post", nil)
+	})
+
+	app.Post("/post", func(req *crater.Request, res *crater.Response) {
+		user := &models.User{}
+
+		if err := req.Parse(user); err != nil {
+			fmt.Println(err.Error())
+		}
+
+		res.Render("post", user)
+	})
+
 	server := crater.Server{}
 	server.Listen(":8080")
 }
