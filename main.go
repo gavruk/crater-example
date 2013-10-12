@@ -27,7 +27,7 @@ func main() {
 
 	app.Get("/hello", func(req *crater.Request, res *crater.Response) {
 
-		user := &models.User{}
+		user := new(models.User)
 
 		if err := req.Parse(user); err != nil {
 			fmt.Println(err.Error())
@@ -41,7 +41,7 @@ func main() {
 	})
 
 	app.Post("/post", func(req *crater.Request, res *crater.Response) {
-		user := &models.User{}
+		user := new(models.User)
 
 		if err := req.Parse(user); err != nil {
 			fmt.Println(err.Error())
@@ -61,7 +61,7 @@ func main() {
 	})
 
 	app.Get("/redirect", func(req *crater.Request, res *crater.Response) {
-		res.Redirect("post")
+		res.Redirect("/post")
 	})
 
 	server := crater.Server{}

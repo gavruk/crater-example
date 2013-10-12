@@ -2,6 +2,6 @@ package models
 
 // User model
 type User struct {
-	Name string
-	Age  int
+	Name string `schema:"name"`
+	Age  int    `schema:"age"`
 }
