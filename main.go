@@ -60,6 +60,10 @@ func main() {
 		res.Json(user)
 	})
 
+	app.Get("/redirect", func(req *crater.Request, res *crater.Response) {
+		res.Redirect("post")
+	})
+
 	server := crater.Server{}
 	server.Listen(":8080")
 }
