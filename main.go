@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/gavruk/crater"
+	"time"
 
+	"github.com/gavruk/crater"
 	"github.com/gavruk/crater-example/models"
 )
 
@@ -22,10 +23,15 @@ func main() {
 	app.HandleStaticFiles("/content")
 
 	app.Get("/", func(req *crater.Request, res *crater.Response) {
+		req.Session.Value = &models.User{Name: "Bob"}
+		req.Cookie.Set("hello", "world", time.Now().Add(time.Hour))
 		res.Render("index", nil)
 	})
 
 	app.Get("/hello", func(req *crater.Request, res *crater.Response) {
+		fmt.Println(req.Session.Value)
+		req.Session.Abandon()
+		fmt.Println(req.Cookie.Get("hello"))
 
 		user := new(models.User)
 
