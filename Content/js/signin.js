@@ -5,7 +5,10 @@ $(function() {
 		var data = {username: $("#username").val(), password: $("#password").val()};
 		$.post("/signin", data, function (response) {
 			if (response.success) {
-				window.location = "/"
+				window.location = "/";
+			} else {
+				$("#error").html(response.message);
+				$("#error").show();
 			}
 		})
 	});

@@ -31,7 +31,10 @@ func main() {
 			res.Json(&models.JsonResponse{false, err.Error()})
 			return
 		}
-
+		if signInModel.Password != "123" {
+			res.Json(&models.JsonResponse{false, "Credentials are not valid!"})
+			return
+		}
 		req.Session.Value = signInModel
 		res.Json(&models.JsonResponse{true, ""})
 	})
