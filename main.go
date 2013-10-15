@@ -19,7 +19,7 @@ func main() {
 
 	app.Settings(config)
 
-	app.HandleStaticFiles("/content")
+	app.HandleStaticContent("/content")
 
 	app.Get("/signin", func(req *crater.Request, res *crater.Response) {
 		res.Render("signin", nil)
