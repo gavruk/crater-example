@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gavruk/crater"
+	"github.com/gavruk/crater/session"
+
 	"github.com/gavruk/crater-example/models"
 )
 
@@ -18,6 +21,8 @@ func main() {
 	config.StaticFilesPath = "./Content"
 
 	app.Settings(config)
+
+	app.UseSessionStore(session.NewInMemorySessionStore(), time.Hour)
 
 	app.HandleStaticContent("/content")
 
