@@ -58,6 +58,10 @@ func main() {
 		res.Redirect("/signin")
 	})
 
+	app.Get("/about", func(req *crater.Request, res *crater.Response) {
+		res.Render("about", nil)
+	})
+
 	app.Get("/string", func(req *crater.Request, res *crater.Response) {
 		res.RenderString("<h1>Hello World</h1>")
 	})
