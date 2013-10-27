@@ -14,13 +14,11 @@ func main() {
 	fmt.Println("Listening on port 8080:")
 	fmt.Println("http://localhost:8080")
 
-	app := crater.App{}
+	settings := &crater.Settings{}
+	settings.ViewsPath = "./Views"
+	settings.StaticFilesPath = "./Content"
 
-	config := crater.Settings{}
-	config.ViewsPath = "./Views"
-	config.StaticFilesPath = "./Content"
-
-	app.Settings(config)
+	app := crater.NewApp(settings)
 
 	app.UseSessionStore(session.NewInMemorySessionStore(), time.Hour)
 
@@ -66,6 +64,5 @@ func main() {
 		res.RenderString("<h1>Hello World</h1>")
 	})
 
-	server := crater.Server{}
-	server.Listen(":8080")
+	app.Listen(":8080")
 }
