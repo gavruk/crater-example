@@ -61,7 +61,7 @@ func main() {
 	})
 
 	app.Get("/string", func(req *crater.Request, res *crater.Response) {
-		res.RenderString("<h1>Hello World</h1>")
+		res.Send("<h1>Hello World</h1>")
 	})
 
 	app.Listen(":8080")
