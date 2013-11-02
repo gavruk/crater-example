@@ -25,7 +25,7 @@ func main() {
 	app.HandleStaticContent("/content")
 
 	app.Get("/signin", func(req *crater.Request, res *crater.Response) {
-		res.Render("signin", nil)
+		res.RenderTemplate("signin", nil)
 	})
 
 	app.Post("/signin", func(req *crater.Request, res *crater.Response) {
@@ -48,7 +48,7 @@ func main() {
 			res.Redirect("/signin")
 			return
 		}
-		res.Render("index", userFromSession)
+		res.RenderTemplate("index", userFromSession)
 	})
 
 	app.Get("/signout", func(req *crater.Request, res *crater.Response) {
@@ -57,7 +57,7 @@ func main() {
 	})
 
 	app.Get("/about", func(req *crater.Request, res *crater.Response) {
-		res.Render("about", nil)
+		res.RenderTemplate("about", nil)
 	})
 
 	app.Get("/string", func(req *crater.Request, res *crater.Response) {
