@@ -38,7 +38,7 @@ func main() {
 			res.Json(&models.JsonResponse{false, "Credentials are not valid!"})
 			return
 		}
-		req.Session.Value = signInModel
+		req.Session.Value = signInModel.Username
 		res.Json(&models.JsonResponse{true, ""})
 	})
 
@@ -48,7 +48,10 @@ func main() {
 			res.Redirect("/signin")
 			return
 		}
-		res.RenderTemplate("index", userFromSession)
+		username := userFromSession.(string)
+		model := new(models.ViewModel)
+		model.User = models.User{Name: username}
+		res.RenderTemplate("index", model)
 	})
 
 	app.Get("/signout", func(req *crater.Request, res *crater.Response) {
@@ -57,7 +60,15 @@ func main() {
 	})
 
 	app.Get("/about", func(req *crater.Request, res *crater.Response) {
-		res.RenderTemplate("about", nil)
+		userFromSession := req.Session.Value
+		if userFromSession == nil {
+			res.Redirect("/signin")
+			return
+		}
+		username := userFromSession.(string)
+		model := new(models.ViewModel)
+		model.User = models.User{Name: username}
+		res.RenderTemplate("about", model)
 	})
 
 	app.Get("/string", func(req *crater.Request, res *crater.Response) {
