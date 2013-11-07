@@ -55,7 +55,9 @@ func main() {
 	})
 
 	app.Get("/signout", func(req *crater.Request, res *crater.Response) {
-		req.Session.Abandon()
+		if req.Session != nil {
+			req.Session.Abandon()
+		}
 		res.Redirect("/signin")
 	})
 
