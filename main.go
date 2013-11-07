@@ -18,7 +18,8 @@ func main() {
 	settings.ViewsPath = "./Views"
 	settings.StaticFilesPath = "./Content"
 
-	app := crater.NewApp(settings)
+	app := crater.NewApp()
+	app.Settings(settings)
 
 	app.UseSessionStore(session.NewInMemorySessionStore(), time.Hour)
 
