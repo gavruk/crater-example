@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gavruk/crater"
-	"github.com/gavruk/crater/session"
+	"github.com/gavruk/crater/middleware"
 
 	"github.com/gavruk/crater-example/models"
 )
@@ -21,9 +20,9 @@ func main() {
 	app := crater.NewApp()
 	app.Settings(settings)
 
-	app.UseSessionStore(session.NewInMemorySessionStore(), time.Hour)
-
 	app.HandleStaticContent("/content")
+
+	app.Use(middleware.InMemorySession)
 
 	app.Get("/signin", func(req *crater.Request, res *crater.Response) {
 		res.RenderTemplate("signin", nil)
