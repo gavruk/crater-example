@@ -77,5 +77,11 @@ func main() {
 		res.Send("<h1>Hello World</h1>")
 	})
 
+	// example: localhost:8080/hello/John
+	app.Get("/hello/(?P<name>.*)", func(req *crater.Request, res *crater.Response) {
+		name := req.Vars["name"]
+		res.Send(fmt.Sprintf("<h1>Hello, %s</h1>", name))
+	})
+
 	app.Listen(":8080")
 }
