@@ -78,7 +78,7 @@ func main() {
 	})
 
 	// example: localhost:8080/hello/John
-	app.Get("/hello/(?P<name>.*)", func(req *crater.Request, res *crater.Response) {
+	app.Get("/hello/{name}", func(req *crater.Request, res *crater.Response) {
 		name := req.Vars["name"]
 		res.Send(fmt.Sprintf("<h1>Hello, %s</h1>", name))
 	})
