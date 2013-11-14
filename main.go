@@ -79,7 +79,7 @@ func main() {
 
 	// example: localhost:8080/hello/John
 	app.Get("/hello/{name}", func(req *crater.Request, res *crater.Response) {
-		name := req.RouteVars["name"]
+		name := req.RouteParams["name"]
 		res.Send(fmt.Sprintf("<h1>Hello, %s</h1>", name))
 	})
 
