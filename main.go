@@ -15,12 +15,12 @@ func main() {
 
 	settings := &crater.Settings{}
 	settings.ViewsPath = "./Views"
-	settings.StaticFilesPath = "./Content"
+	settings.StaticPath = "./Content"
 
 	app := crater.NewApp()
 	app.Settings(settings)
 
-	app.HandleStaticContent("/content")
+	app.Static("/content")
 
 	app.Use(middleware.InMemorySession)
 
@@ -79,7 +79,7 @@ func main() {
 
 	// example: localhost:8080/hello/John
 	app.Get("/hello/{name}", func(req *crater.Request, res *crater.Response) {
-		name := req.Vars["name"]
+		name := req.RouteVars["name"]
 		res.Send(fmt.Sprintf("<h1>Hello, %s</h1>", name))
 	})
 
