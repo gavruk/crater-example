@@ -14,8 +14,8 @@ func main() {
 	fmt.Println("http://localhost:8080")
 
 	settings := &crater.Settings{}
-	settings.ViewsPath = "./Views"
-	settings.StaticPath = "./Content"
+	settings.ViewsPath = "./views"
+	settings.StaticPath = "./content"
 
 	app := crater.NewApp()
 	app.Settings(settings)
@@ -23,6 +23,18 @@ func main() {
 	app.Static("/content")
 
 	app.Use(middleware.InMemorySession)
+
+	// Check if authorized. If not - redirect to signin page
+	app.Use(func(req *crater.Request, res *crater.Response) {
+		userFromSession := req.Session.Value
+		if userFromSession == nil && req.URL.String() != "/signin" {
+			res.Redirect("/signin")
+		}
+	})
+
+	// =============
+	// Auth
+	// =============
 
 	app.Get("/signin", func(req *crater.Request, res *crater.Response) {
 		res.RenderTemplate("signin", nil)
@@ -42,18 +54,6 @@ func main() {
 		res.Json(&models.JsonResponse{true, ""})
 	})
 
-	app.Get("/", func(req *crater.Request, res *crater.Response) {
-		userFromSession := req.Session.Value
-		if userFromSession == nil {
-			res.Redirect("/signin")
-			return
-		}
-		username := userFromSession.(string)
-		model := new(models.ViewModel)
-		model.User = models.User{Name: username}
-		res.RenderTemplate("index", model)
-	})
-
 	app.Get("/signout", func(req *crater.Request, res *crater.Response) {
 		if req.Session != nil {
 			req.Session.Abandon()
@@ -61,26 +61,68 @@ func main() {
 		res.Redirect("/signin")
 	})
 
-	app.Get("/about", func(req *crater.Request, res *crater.Response) {
-		userFromSession := req.Session.Value
-		if userFromSession == nil {
-			res.Redirect("/signin")
+	// =============
+	// CRUD
+	// =============
+
+	books := make(map[string]*models.BookModel)
+
+	app.Get("/", func(req *crater.Request, res *crater.Response) {
+		model := models.NewBookListViewModel(req.Session.Value)
+		for _, v := range books {
+			model.Books = append(model.Books, v)
+		}
+		res.RenderTemplate("index", model)
+	})
+
+	app.Get("/add", func(req *crater.Request, res *crater.Response) {
+		model := models.NewAddBookViewModel(req.Session.Value)
+		res.RenderTemplate("add", model)
+	})
+
+	app.Post("/add", func(req *crater.Request, res *crater.Response) {
+		book := new(models.BookModel)
+		if err := req.Parse(book); err != nil {
+			res.Redirect("/add")
+		}
+		book.Id = GenerateId()
+		books[book.Id] = book
+		res.Redirect("/")
+	})
+
+	app.Get("/edit/{id}", func(req *crater.Request, res *crater.Response) {
+		model := models.NewAddBookViewModel(req.Session.Value)
+		bookId := req.RouteParams["id"]
+		book := books[bookId]
+		if book == nil {
+			res.Redirect("/")
 			return
 		}
-		username := userFromSession.(string)
-		model := new(models.ViewModel)
-		model.User = models.User{Name: username}
+		model.Book = book
+		res.RenderTemplate("edit", model)
+	})
+
+	app.Post("/edit", func(req *crater.Request, res *crater.Response) {
+		book := new(models.BookModel)
+		if err := req.Parse(book); err != nil {
+			res.Redirect("/edit")
+		}
+		books[book.Id] = book
+		res.Redirect("/")
+	})
+
+	app.Get("/remove/{id}", func(req *crater.Request, res *crater.Response) {
+		bookId := req.RouteParams["id"]
+		delete(books, bookId)
+		res.Redirect("/")
+	})
+
+	// ===========
+	// About
+	// ============
+	app.Get("/about", func(req *crater.Request, res *crater.Response) {
+		model := models.NewIndexViewModel(req.Session.Value)
 		res.RenderTemplate("about", model)
-	})
-
-	app.Get("/string", func(req *crater.Request, res *crater.Response) {
-		res.Send("<h1>Hello World</h1>")
-	})
-
-	// example: localhost:8080/hello/John
-	app.Get("/hello/{name}", func(req *crater.Request, res *crater.Response) {
-		name := req.RouteParams["name"]
-		res.Send(fmt.Sprintf("<h1>Hello, %s</h1>", name))
 	})
 
 	app.Listen(":8080")

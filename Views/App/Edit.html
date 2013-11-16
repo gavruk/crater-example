@@ -1,0 +1,22 @@
+{{ define "edit" }}
+
+{{ template "header" .}}
+
+<h1> Add Book</h1>
+
+<form role="form" action="/edit" method="POST">
+  <input type="hidden" name="id" value="{{.Book.Id}}">
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="value" class="form-control" id="title" name="title" placeholder="Enter title" value="{{.Book.Title}}">
+  </div>
+  <div class="form-group">
+    <label for="author">Author</label>
+    <input type="value" class="form-control" id="author" name="author" placeholder="Author" value="{{.Book.Author}}">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+{{ template "footer" .}}
+
+{{ end }}

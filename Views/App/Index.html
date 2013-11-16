@@ -2,7 +2,30 @@
 
 {{ template "header" .}}
 
-<h1> Hello, Crater </h1>
+<a href="/add">
+	<button type="button" class="btn btn-primary">Add</button>
+</a>
+
+<h1> Books </h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Title</th>
+			<th>Author</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{range .Books}}
+			<tr>
+				<td>{{.Title}}</td>
+				<td>{{.Author}}</td>
+				<td><a href="/edit/{{.Id}}">Edit</a> | <a href="/remove/{{.Id}}">Delete</a></td>
+			</tr>
+		{{end}}
+	</tbody>
+</table>
 
 {{ template "footer" .}}
 
